@@ -4,7 +4,7 @@ import java.util.ArrayList;
 public class ObjectCreator {
     Scanner input = new Scanner(System.in);
 
-    public ArrayList<Object>  objectCreatorMenu() {
+    public ArrayList<Object> objectCreatorMenu() {
         ArrayList<Object> serializeList = new ArrayList();
         String objOption = "";
 
@@ -36,10 +36,8 @@ public class ObjectCreator {
             else if (objOption.equals("5")) {
                 serializeList.add(createCollectionObject());
             }
-            else {
-                if (!objOption.equals("6")) {
-                    System.out.println("* Invalid option selected *\n");
-                }
+            else if (!objOption.equals("6")) {
+                System.out.println("* Invalid option selected *\n");
             }
         }
 
@@ -62,7 +60,7 @@ public class ObjectCreator {
                 return new ClassA(a,b);
             }
             catch (Exception e){
-                System.out.println("Invalid input");
+                System.out.println("* Invalid input *\n");
                 input.nextLine();
             }
         }
@@ -94,8 +92,7 @@ public class ObjectCreator {
                 return new ClassC(intArray);
             }
             catch (Exception e) {
-                System.out.println("Invalid input; ensure values are integers and separated by ','");
-                input.nextLine();
+                System.out.println("Invalid input; ensure values are integers and separated by ','\n");
             }
         }
 
@@ -120,7 +117,7 @@ public class ObjectCreator {
                 return new ClassD(arrayClassA);
             }
             catch (Exception e) {
-                System.out.println("Invalid input; length of the array must be an integer");
+                System.out.println("* Invalid input; length of the array must be an integer *\n");
                 input.nextLine();
             }
         }
@@ -131,11 +128,10 @@ public class ObjectCreator {
     public Object createCollectionObject() {
         System.out.println("... creating Collection Object\n");
         boolean createFlag = false;
+        ArrayList arrayList = new ArrayList();
 
         while (!createFlag) {
             try {
-                ArrayList arrayList = new ArrayList();
-
                 System.out.print("Add an object?\n");
                 System.out.print("1 - YES\n");
                 System.out.print("2 - NO\n");
@@ -150,12 +146,11 @@ public class ObjectCreator {
                     return new ClassE(arrayList);
                 }
                 else {
-                    System.out.println("Invalid selection");
-                    input.nextLine();
+                    System.out.println("* Invalid selection *\n");
                 }
             }
             catch (Exception e) {
-                System.out.println("Invalid input");
+                System.out.println("* Invalid input *\n");
                 input.nextLine();
             }
         }
