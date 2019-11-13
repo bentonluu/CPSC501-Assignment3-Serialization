@@ -2,13 +2,11 @@ import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.Scanner;
-
 import org.jdom2.Document;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 
 public class Sender {
-
     public static void main(String args[]) {
         Scanner input = new Scanner(System.in);
         ArrayList<Object> objectSerializeList = new ArrayList<>();
@@ -16,16 +14,15 @@ public class Sender {
         XMLOutputter xmlOutputter = new XMLOutputter(Format.getPrettyFormat());
         Document serializedDoc;
 
-        ClassA classA = new ClassA(1,true);
-        //serializedDoc = serializer.serialize(classA);
-        //Sender sender = new Sender("127.0.0.1", 5000, serializedDoc);
-
         String option = "";
-        while (!option.equals("3")) {
+        while (!option.equals("6")) {
             System.out.println("--- MAIN MENU ---");
             System.out.println("1 - Create Object(s)");
-            System.out.println("2 - XML Document Options");
-            System.out.println("3 - End program");
+            System.out.println("2 - List Object(s)");
+            System.out.println("3 - Send XML Document");
+            System.out.println("4 - Print XML Document");
+            System.out.println("5 - Store XML Document");
+            System.out.println("6 - End program\n");
 
             if (input.hasNext()) {
                 option = input.nextLine();
@@ -36,56 +33,75 @@ public class Sender {
                 objectSerializeList = objectCreator.objectCreatorMenu();
             }
             else if (option.equals("2")) {
-                serializedDoc = serializer.serialize(objectSerializeList);
+                for (Object obj : objectSerializeList) {
+                    System.out.println(obj);
+                }
+            }
+            else if (option.equals("3")) {
+                try {
+                    System.out.println("Enter destination address:");
+                    String destinationIP = input.nextLine();
+                    int port = 5000;
 
-                while (!option.equals("4")) {
-                    System.out.println("--- XML DOCUMENT OPTIONS MENU ---");
-                    System.out.println("1 - Store XML Document");
-                    System.out.println("2 - Print XML Document");
-                    System.out.println("3 - Send XML Document");
-                    System.out.println("4 - Exit Menu");
-
-                    if (input.hasNext()) {
-                        option = input.nextLine();
+                    for (Object obj : objectSerializeList) {
+                        serializedDoc = serializer.serialize(obj);
+                        sendFile(destinationIP, port, serializedDoc);
                     }
-
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            else if (option.equals("4")) {
+                for (Object obj : objectSerializeList) {
                     try {
-                        if (option.equals("1")) {
-                            String fileName = "fileSend.xml";
-                            xmlOutputter.output(serializedDoc, new FileOutputStream(fileName));
-                        }
-                        else if (option.equals("2")) {
-                            xmlOutputter.output(serializedDoc,System.out);
-                            System.out.println("");
-                        }
-                        else if (option.equals("3")) {
-                            System.out.println("Enter destination address:");
-                            String destinationIP = input.nextLine();
-                            System.out.println("Enter port:");
-                            int port = input.nextInt();
-
-                            sendFile(destinationIP, port, serializedDoc);
-                        }
-                        else if (!option.equals("4")) {
-                            System.out.println("* Invalid option selected *\n");
-                        }
+                        serializedDoc = serializer.serialize(obj);
+                        xmlOutputter.output(serializedDoc,System.out);
+                        System.out.println("");
                     }
                     catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
             }
-            else {
-                if (!option.equals("3")) {
-                    System.out.println("* Invalid option selected *\n");
+            else if (option.equals("5")) {
+                for (Object obj : objectSerializeList) {
+                    try {
+                        serializedDoc = serializer.serialize(obj);
+                        String fileName = "";
+                        if (obj.getClass().getName().equals("ClassA")) {
+                            fileName = "sentFileClassA.xml";
+                        }
+                        else if (obj.getClass().getName().equals("ClassB")) {
+                            fileName = "sentFileClassB.xml";
+                        }
+                        else if (obj.getClass().getName().equals("ClassC")) {
+                            fileName = "sentFileClassC.xml";
+                        }
+                        else if (obj.getClass().getName().equals("ClassD")) {
+                            fileName = "sentFileClassD.xml";
+                        }
+                        else if (obj.getClass().getName().equals("ClassE")) {
+                            fileName = "sentFileClassE.xml";
+                        }
+
+                        xmlOutputter.output(serializedDoc, new FileOutputStream(fileName));
+                        System.out.println(fileName + " has been stored");
+                    }
+                    catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
+            }
+            else if (!option.equals("6")){
+                System.out.println("* Invalid option selected *\n");
             }
         }
     }
 
     public static void sendFile(String ip, int port, Document document) {
-        Socket socket = null;
-        OutputStream outputStream = null;
+        Socket socket;
+        OutputStream outputStream;
 
         try {
             socket = new Socket(ip, port);
@@ -105,10 +121,9 @@ public class Sender {
 
             socket.close();
             outputStream.close();
-            System.out.println("Sender side closed");
         }
         catch (Exception e) {
-            System.out.println("Error on sender side");
+            System.out.println("Error on sender side" + e.toString());
         }
     }
 }
