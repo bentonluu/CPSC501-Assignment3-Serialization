@@ -36,8 +36,10 @@ public class ObjectCreator {
             else if (objOption.equals("5")) {
                 serializeList.add(createCollectionObject());
             }
-            else if (!objOption.equals("6")) {
-                System.out.println("* Invalid option selected *\n");
+            else {
+                if (!objOption.equals("6")) {
+                    System.out.println("* Invalid option selected *\n");
+                }
             }
         }
 
@@ -55,6 +57,7 @@ public class ObjectCreator {
                 int a = input.nextInt();
                 System.out.println("Enter a boolean:");
                 boolean b = input.nextBoolean();
+                input.nextLine();
 
                 createFlag = true;
                 return new ClassA(a,b);
@@ -139,7 +142,6 @@ public class ObjectCreator {
                 String option = input.nextLine();
                 if (option.equals("1")) {
                     arrayList.add(createSimpleObject());
-                    input.nextLine();
                 }
                 else if (option.equals("2")) {
                     createFlag = true;
