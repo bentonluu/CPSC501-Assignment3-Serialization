@@ -22,7 +22,7 @@ public class Sender {
             System.out.println("3 - Send XML Document");
             System.out.println("4 - Print XML Document");
             System.out.println("5 - Store XML Document");
-            System.out.println("6 - End program\n");
+            System.out.println("6 - End program");
 
             if (input.hasNext()) {
                 option = input.nextLine();
@@ -39,13 +39,24 @@ public class Sender {
             }
             else if (option.equals("3")) {
                 try {
-                    System.out.println("Enter destination address:");
-                    String destinationIP = input.nextLine();
-                    int port = 5000;
+                    boolean sentFlag = true;
+                    while (sentFlag) {
+                        try {
+                            System.out.println("Enter destination address:");
+                            String destinationIP = input.nextLine();
+                            System.out.println("Enter port:");
+                            int port = input.nextInt();
 
-                    for (Object obj : objectSerializeList) {
-                        serializedDoc = serializer.serialize(obj);
-                        sendFile(destinationIP, port, serializedDoc);
+                            for (Object obj : objectSerializeList) {
+                                serializedDoc = serializer.serialize(obj);
+                                sendFile(destinationIP, port, serializedDoc);
+                            }
+                            sentFlag = false;
+                        }
+                        catch (Exception e) {
+                            System.out.println("* Invalid input *\n");
+                            input.nextLine();
+                        }
                     }
                 }
                 catch (Exception e) {
@@ -93,8 +104,10 @@ public class Sender {
                     }
                 }
             }
-            else if (!option.equals("6")){
-                System.out.println("* Invalid option selected *\n");
+            else {
+                if (!option.equals("6")) {
+                    System.out.println("* Invalid option selected *\n");
+                }
             }
         }
     }

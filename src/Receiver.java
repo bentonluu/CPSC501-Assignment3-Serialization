@@ -1,4 +1,6 @@
+import java.io.FileOutputStream;
 import java.net.*;
+import java.util.Scanner;
 import org.jdom2.input.SAXBuilder;
 import org.jdom2.Document;
 import org.jdom2.output.Format;
@@ -8,6 +10,24 @@ public class Receiver {
     private Socket socket;
     private ServerSocket server;
 
+    public static void main(String args[]) {
+        Scanner input = new Scanner(System.in);
+        int port;
+
+        while (true) {
+            try {
+                System.out.println("Enter port:");
+                port = input.nextInt();
+                System.out.println("...starting Receiver");
+                Receiver receiver = new Receiver(port);
+            }
+            catch (Exception e) {
+                System.out.println("* Invalid input; enter a valid port number *\n");
+                input.nextLine();
+            }
+        }
+    }
+
     public Receiver(int port) {
         try {
             InetAddress address = InetAddress.getLocalHost();
@@ -16,32 +36,24 @@ public class Receiver {
             System.out.println("Server opened at: " + address.getHostAddress());
             System.out.println("Server started");
 
-            socket = server.accept();
-            System.out.println("Client accepted");
+            while (true) {
+                socket = server.accept();
 
-            SAXBuilder saxBuilder = new SAXBuilder();
-            Document receivedDoc = saxBuilder.build(socket.getInputStream());
+                SAXBuilder saxBuilder = new SAXBuilder();
+                Document receivedDoc = saxBuilder.build(socket.getInputStream());
 
-            Deserializer deserializer = new Deserializer();
-            deserializer.deserialize(receivedDoc);
+                XMLOutputter xmlOutputter = new XMLOutputter(Format.getPrettyFormat());
+                xmlOutputter.output(receivedDoc, new FileOutputStream("receivedFile.xml"));
+                System.out.println(xmlOutputter.outputString(receivedDoc));
 
-            XMLOutputter xmlOutputter = new XMLOutputter(Format.getPrettyFormat());
-            //System.out.println(xmlOutputter.outputString(receivedDoc));
+                Deserializer deserializer = new Deserializer();
+                Object deserializeObj = deserializer.deserialize(receivedDoc);
 
-            System.out.println("Received from client: "+ receivedDoc.getRootElement().toString());
-            server.close();
-            socket.close();
-
-            System.out.println("Receiver side closed");
+                new Inspector().inspect(deserializeObj, true);
+            }
         }
         catch (Exception e) {
             System.out.println("Error on receiver side" + e.toString());
         }
-    }
-
-    public static void main(String args[]) {
-        //Receiver receiver = new Receiver(5000);
-
-
     }
 }
