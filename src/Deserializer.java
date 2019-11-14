@@ -1,6 +1,5 @@
 import org.jdom2.Document;
 import org.jdom2.Element;
-
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -19,7 +18,6 @@ public class Deserializer {
         Element rootElement = document.getRootElement();
         List<Element> objectList = rootElement.getChildren();
         for (Element object : objectList) {
-            System.out.println(object.getAttributeValue("class"));
             Class classObj = Class.forName(object.getAttributeValue("class"));
 
             if (!classObj.isArray()) {
@@ -79,27 +77,21 @@ public class Deserializer {
         else if (fieldClass.equals(boolean.class)) {
             return Boolean.parseBoolean(field.getText());
         }
+        else if (fieldClass.equals(byte.class)) {
+            return Byte.parseByte(field.getText());
+        }
+        else if (fieldClass.equals(short.class)) {
+            return Short.parseShort(field.getText());
+        }
+        else if (fieldClass.equals(double.class)) {
+            return Double.parseDouble(field.getText());
+        }
+        else if (fieldClass.equals(long.class)) {
+            return Long.parseLong(field.getText());
+        }
+        else if (fieldClass.equals(float.class)) {
+            return Float.parseFloat(field.getText());
+        }
         return null;
-    }
-
-    public static void main(String args[]) throws Exception {
-        Serializer serializer = new Serializer();
-        ArrayList<Object> objectArrayList = new ArrayList<>();
-
-        ClassA classA = new ClassA();
-        //ClassC classC = new ClassC(3);
-        //objectArrayList.add(classC);
-        //objectArrayList.add(new ClassA());
-        //objectArrayList.add(new ClassB(new ClassA(1,true)));
-        ArrayList arrayList = new ArrayList();
-        arrayList.add(new ClassA());
-        ClassE classE = new ClassE(arrayList);
-
-        objectArrayList.add(classE);
-        //System.out.println(arrayList.size());
-        Document doc = serializer.serialize(objectArrayList);
-        Deserializer deserializer = new Deserializer();
-        Object obj = deserializer.deserialize(doc);
-        new Inspector().inspect(obj, true);
     }
 }
