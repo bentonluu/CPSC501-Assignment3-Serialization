@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<serialized>
+  <object class="[Ljava.lang.Object;" id="2" length="0" />
+  <object class="[Ljava.lang.Object;" id="3" length="0" />
+  <object class="ClassA" id="5">
+    <field name="a" declaringclass="ClassA">
+      <value>1</value>
+    </field>
+    <field name="b" declaringclass="ClassA">
+      <value>true</value>
+    </field>
+  </object>
+  <object class="[Ljava.lang.Object;" id="4" length="10">
+    <reference>5</reference>
+    <value>null</value>
+    <value>null</value>
+    <value>null</value>
+    <value>null</value>
+    <value>null</value>
+    <value>null</value>
+    <value>null</value>
+    <value>null</value>
+    <value>null</value>
+  </object>
+  <object class="java.util.ArrayList" id="1">
+    <field name="serialVersionUID" declaringclass="java.util.ArrayList">
+      <value>8683452581122892189</value>
+    </field>
+    <field name="DEFAULT_CAPACITY" declaringclass="java.util.ArrayList">
+      <value>10</value>
+    </field>
+    <field name="EMPTY_ELEMENTDATA" declaringclass="java.util.ArrayList">
+      <reference>2</reference>
+    </field>
+    <field name="DEFAULTCAPACITY_EMPTY_ELEMENTDATA" declaringclass="java.util.ArrayList">
+      <reference>3</reference>
+    </field>
+    <field name="elementData" declaringclass="java.util.ArrayList">
+      <reference>4</reference>
+    </field>
+    <field name="size" declaringclass="java.util.ArrayList">
+      <value>1</value>
+    </field>
+    <field name="MAX_ARRAY_SIZE" declaringclass="java.util.ArrayList">
+      <value>2147483639</value>
+    </field>
+  </object>
+  <object class="ClassE" id="0">
+    <field name="arrayList" declaringclass="ClassE">
+      <reference>1</reference>
+    </field>
+  </object>
+</serialized>
