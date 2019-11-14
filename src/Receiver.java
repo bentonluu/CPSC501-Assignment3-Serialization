@@ -27,7 +27,9 @@ public class Receiver {
             }
         }
     }
-
+    // Receives the document from the sender and re-builds the document to be passed to the deserializer
+    // The XML document is printed to screen and stored in a file named 'receivedFile.xml'
+    // Once the object is deserialized, it is passed into the Inspector to ensure that the object was properly re-created
     public Receiver(int port) {
         try {
             InetAddress address = InetAddress.getLocalHost();

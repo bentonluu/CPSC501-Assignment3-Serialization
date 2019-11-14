@@ -1,5 +1,4 @@
 import java.lang.reflect.*;
-import java.util.ArrayList;
 import java.util.IdentityHashMap;
 import org.jdom2.*;
 
@@ -76,10 +75,11 @@ public class Serializer {
             rootXML.addContent(objXML);
         }
         catch (Exception e) {
-            System.out.println("Error" + e.toString());
+            System.out.println("Error: " + e.toString());
         }
     }
 
+    // The XML elements for an array object and the contents inside the array used for the serialized document
     public void arrayObjectXML(Class arrayClass, Object arrayObj, Element rootXML) {
         int arrayLength = Array.getLength(arrayObj);
 
@@ -111,6 +111,7 @@ public class Serializer {
         rootXML.addContent(objXML);
     }
 
+    // Keeps track of the objects being serialized and gives each object an unique ID
     public int identityMapTracker(Object object) {
         int id = uniqueID;
 

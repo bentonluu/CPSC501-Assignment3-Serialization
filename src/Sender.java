@@ -112,6 +112,7 @@ public class Sender {
         }
     }
 
+    // Sends the serialized document to the Receiver
     public static void sendFile(String ip, int port, Document document) {
         Socket socket;
         OutputStream outputStream;

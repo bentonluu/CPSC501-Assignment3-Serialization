@@ -4,13 +4,13 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 public class Deserializer {
     HashMap<String,Object> ihm;
 
+    // Deserializes the document received and creates either an object or array instance with it's fields filled in
     public Object deserialize(Document document) throws Exception {
         ihm = new HashMap();
         Object objInstance = null;
@@ -70,6 +70,7 @@ public class Deserializer {
         return objInstance;
     }
 
+    // Converts the element value into the specific class of the field
     public Object parseFieldValue(Class fieldClass, Element field) {
         if (fieldClass.equals(int.class)) {
             return Integer.parseInt(field.getText());
