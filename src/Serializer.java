@@ -2,31 +2,21 @@ import java.lang.reflect.*;
 import java.util.ArrayList;
 import java.util.IdentityHashMap;
 import org.jdom2.*;
-import org.jdom2.output.Format;
-import org.jdom2.output.XMLOutputter;
 
 public class Serializer {
     Document document = new Document();
     IdentityHashMap<Object,Integer> ihm;
     int uniqueID;
 
-    public Document serialize(ArrayList<Object> objectArrayList) {
-
+    public Document serialize(Object object) {
         Element rootXML = new Element("serialized");
         document.setRootElement(rootXML);
 
         ihm = new IdentityHashMap();
         uniqueID = 0;
 
-        for (Object object : objectArrayList) {
-            if (!ihm.containsKey(object)) {
-                identityMapTracker(object);
-                serializeObjectXML(object, rootXML);
-            }
-        }
-
-        XMLOutputter xmlOutputter = new XMLOutputter(Format.getPrettyFormat());
-        System.out.println(xmlOutputter.outputString(document));
+        identityMapTracker(object);
+        serializeObjectXML(object, rootXML);
 
         return document;
     }
@@ -49,7 +39,7 @@ public class Serializer {
 
                     Element fieldXML = new Element("field");
                     fieldXML.setAttribute("name", field.getName());
-                    fieldXML.setAttribute("declaringclass", field.getDeclaringClass().toString());
+                    fieldXML.setAttribute("declaringclass", field.getDeclaringClass().getName());
                     objXML.addContent(fieldXML);
 
                     Object fieldValue = null;
@@ -75,6 +65,7 @@ public class Serializer {
                     }
                     else {
                         Element referenceXML = new Element("reference");
+
                         referenceXML.setText(String.valueOf(identityMapTracker(fieldValue)));
                         fieldXML.addContent(referenceXML);
 
@@ -132,38 +123,5 @@ public class Serializer {
         }
 
         return id;
-    }
-
-    public static void main(String args[]) {
-        Serializer serializer = new Serializer();
-        ArrayList<Object> objectArrayList = new ArrayList<>();
-
-        ClassA classA = new ClassA();
-        //serializer.serializeToXML(classA);
-
-        //ClassC classC = new ClassC(3);
-        //classC.setIntArrayItem(0,1);
-        //serializer.serialize(classC);
-
-        ClassB classB = new ClassB(classA);
-        //objectArrayList.add(classB);
-        //objectArrayList.add(classA);
-
-        //System.out.println(classA);
-        //System.out.println(new ClassA());
-        Object[] objArray = {new ClassA(), new ClassA(1,true)};
-
-        for (Object obj : objArray) {
-            System.out.println(obj);
-        }
-
-        ClassD classD = new ClassD(objArray);
-        //objectArrayList.add(classD);
-        ArrayList<Integer> arrayList = new ArrayList();
-        arrayList.add(1);
-        arrayList.add(2);
-        ClassE classE = new ClassE();
-        //objectArrayList.add(classC);
-        serializer.serialize(objectArrayList);
     }
 }
