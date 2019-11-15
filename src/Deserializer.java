@@ -29,14 +29,16 @@ public class Deserializer {
 
             List<Element> objFieldList = object.getChildren();
             for (int i = 0; i < objFieldList.size(); i++) {
+                Element objElement = objFieldList.get(i);
+
                 if (objInstance.getClass().isArray()) {
-                    if (objFieldList.get(i).getName().equals("value")) {
-                        Array.set(objInstance, i, parseFieldValue(objInstance.getClass().getComponentType(), objFieldList.get(i)));
+                    if (objElement.getName().equals("value")) {
+                        Array.set(objInstance, i, parseFieldValue(objInstance.getClass().getComponentType(), objElement));
                     }
-                    else if (objFieldList.get(i).getName().equals("reference")) {
-                        Array.set(objInstance, i, ihm.get(objFieldList.get(i).getText()));
+                    else if (objElement.getName().equals("reference")) {
+                        Array.set(objInstance, i, ihm.get(objElement.getText()));
                     }
-                    else if (objFieldList.get(i).getText().equals("null")) {
+                    else if (objElement.getText().equals("null")) {
                         Array.set(objInstance, i, null);
                     }
                 }
