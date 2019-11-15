@@ -4,6 +4,7 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -13,22 +14,18 @@ public class Deserializer {
     // Deserializes the document received and creates either an object or array instance with it's fields filled in
     public Object deserialize(Document document) throws Exception {
         ihm = new HashMap();
-        Object objInstance = null;
 
         Element rootElement = document.getRootElement();
         List<Element> objectList = rootElement.getChildren();
+        setObjFieldValue(objectList);
+
+        return ihm.get("0");
+    }
+
+    // Sets the fields of the created object or array with the proper value or reference
+    public void setObjFieldValue(List<Element> objectList) throws Exception {
         for (Element object : objectList) {
-            Class classObj = Class.forName(object.getAttributeValue("class"));
-
-            if (!classObj.isArray()) {
-                Constructor constructor = classObj.getDeclaredConstructor(null);
-                objInstance = constructor.newInstance(null);
-            }
-            else {
-                objInstance = Array.newInstance(classObj.getComponentType(),Integer.parseInt(object.getAttributeValue("length")));
-            }
-
-            ihm.put(object.getAttributeValue("id"), objInstance);
+            Object objInstance = initializeObject(object);
 
             List<Element> objFieldList = object.getChildren();
             for (int i = 0; i < objFieldList.size(); i++) {
@@ -47,6 +44,7 @@ public class Deserializer {
                     List<Element> fieldElementList = objFieldList.get(i).getChildren();
 
                     for (Element fieldElement : fieldElementList) {
+                        Class classObj = Class.forName(object.getAttributeValue("class"));
                         Field objField = classObj.getDeclaredField(objFieldList.get(i).getAttributeValue("name"));
                         objField.setAccessible(true);
 
@@ -66,6 +64,23 @@ public class Deserializer {
                 }
             }
         }
+    }
+
+    // Creates either an object or array instance depending on the object Element
+    public Object initializeObject(Element object) throws Exception {
+        Object objInstance;
+
+        Class classObj = Class.forName(object.getAttributeValue("class"));
+
+        if (!classObj.isArray()) {
+            Constructor constructor = classObj.getDeclaredConstructor(null);
+            objInstance = constructor.newInstance(null);
+        }
+        else {
+            objInstance = Array.newInstance(classObj.getComponentType(),Integer.parseInt(object.getAttributeValue("length")));
+        }
+
+        ihm.put(object.getAttributeValue("id"), objInstance);
 
         return objInstance;
     }
